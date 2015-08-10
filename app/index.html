@@ -1,0 +1,46 @@
+<html>
+<head>
+    <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+</head>
+    <body>
+        <div id='messagesDiv'></div>
+        <input type='text' id='nameInput' placeholder='Name'>
+        <button type="button" onclick=main()>Track Location</button>
+
+        <script>
+            var myDataRef = new Firebase('commute-watcher.firebaseIO.com');
+            //$('#nameInput').keypress(function (e) {
+            function main() {
+                console.log("im gettting called ");
+                navigator.geolocation.getCurrentPosition(storeCoords);
+                
+                //}
+            }
+            //});
+
+            function storeCoords(location) {
+                var name = $('#nameInput').val();
+                $('#nameInput').val('');
+
+                myDataRef.push({name: name, 
+                                latitude: location.coords.latitude, 
+                                longitude: location.coords.longitude, 
+                                time: location.timestamp});
+            }
+
+            myDataRef.on('child_added', function(snapshot) {
+                var data = snapshot.val();
+                var date = new Date(data.time);
+                displayChatMessage(data.name, data.latitude, data.longitude, date.toLocaleTimeString());
+            });
+
+            function displayChatMessage(name, latitude, longitude, time) {
+                $('<div/>').prepend($('<em/>').text(name+': ' + 
+                    " " + latitude + " " + longitude + 
+                    " " + time)).appendTo($('#messagesDiv'));
+                $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
+            };
+        </script>
+    </body>
+</html>

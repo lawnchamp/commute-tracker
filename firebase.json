@@ -1,0 +1,9 @@
+{
+  "firebase": "commute-watcher",
+  "public": "app",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}
