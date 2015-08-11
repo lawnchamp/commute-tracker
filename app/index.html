@@ -16,7 +16,7 @@
             function startTracking() {
                 console.log("getting location");
                 navigator.geolocation.getCurrentPosition(storeCoords);
-                loop_id = setTimeout( function() {startTracking()}, 5000);
+                loop_id = setTimeout( function() {startTracking()}, 60000);
             }
 
             function stopTracking() {
