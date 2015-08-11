@@ -6,24 +6,26 @@
     <body>
         <div id='messagesDiv'></div>
         <input type='text' id='nameInput' placeholder='Name'>
-        <button type="button" onclick=main()>Track Location</button>
+        <button type="button" onclick=startTracking()>Track Location</button>
+        <button type="button" onclick=stopTracking()>Stop Tracking</button>
 
         <script>
+
             var myDataRef = new Firebase('commute-watcher.firebaseIO.com');
-            //$('#nameInput').keypress(function (e) {
-            function main() {
-                console.log("im gettting called ");
+            var loop_id
+            function startTracking() {
+                console.log("getting location");
                 navigator.geolocation.getCurrentPosition(storeCoords);
-                
-                //}
+                loop_id = setTimeout( function() {startTracking()}, 5000);
             }
-            //});
 
+            function stopTracking() {
+                console.log("Stopping tracking");
+                clearTimeout(loop_id);
+            }
+            
             function storeCoords(location) {
-                var name = $('#nameInput').val();
-                $('#nameInput').val('');
-
-                myDataRef.push({name: name, 
+                myDataRef.push({name: $('#nameInput').val(), 
                                 latitude: location.coords.latitude, 
                                 longitude: location.coords.longitude, 
                                 time: location.timestamp});
